@@ -20,6 +20,9 @@
   </head>
   
   <body>
+  <%
+  pageContext.setAttribute("key1", "val1");
+   %>
   <!-- 隐藏域 -->
   <input type="hidden" id="input1" value="隐藏域的值" />
     <div class="one" id="one">
