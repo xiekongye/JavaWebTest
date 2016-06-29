@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet.RegisterServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>FirstServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet.FirstServlet</servlet-class>
+    <init-param>
+      <param-name>servletName</param-name>
+      <param-value>FirstServlet</param-value>
+    </init-param>
+    <init-param>
+      <param-name>servletDesc</param-name>
+      <param-value>这是一个名字叫FirstServlet的Servlet</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>Servlet2</servlet-name>
+    <servlet-class>com.xiekongye.servlet.Servlet2</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DownloadServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet.DownloadServlet</servlet-class>
+    <init-param>
+      <param-name>downloadPath</param-name>
+      <param-value>/download/</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>RandomNumImageServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet.RandomNumImage</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>DoFormServlet</servlet-name>
+  	<servlet-class>com.xiekongye.servlet.DoFormServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FirstServlet</servlet-name>
+    <url-pattern>/servlet/FirstServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet2</servlet-name>
+    <url-pattern>/servlet/Servlet2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DownloadServlet</servlet-name>
+    <url-pattern>/servlet/DownloadServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RandomNumImageServlet</servlet-name>
+    <url-pattern>/servlet/RandomNumImageServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>DoFormServlet</servlet-name>
+  	<url-pattern>/servlet/DoFormServlet</url-pattern>
+  </servlet-mapping>
+  <context-param>
+    <param-name>Author</param-name>
+    <param-value>xiekongye</param-value>
+  </context-param>
+  <context-param>
+    <param-name>AppDesc</param-name>
+    <param-value>Xiekongye的第一个JavaWeb Application</param-value>
+  </context-param>
+  <!-- 过滤器配置 -->
+  <filter>
+  	<filter-name>FilterDemo</filter-name>
+  	<filter-class>com.xiekongye.filter.FilterDemo</filter-class>
+  </filter>
+  <!-- 过滤器Mapping -->
+  <filter-mapping>
+  	<filter-name>FilterDemo</filter-name>
+  	<!-- 拦截所有请求 -->
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>

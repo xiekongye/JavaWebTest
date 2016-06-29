@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//WebRoot/TestJavascript.jsp=UTF-8
+encoding//WebRoot/index.jsp=UTF-8
+encoding//WebRoot/register.jsp=UTF-8
+encoding//src/com/xiekongye/filter/FilterDemo.java=UTF-8
+encoding//src/com/xiekongye/servlet/DoFormServlet.java=UTF-8
+encoding//src/com/xiekongye/servlet/DownloadServlet.java=UTF-8
+encoding//src/com/xiekongye/servlet/FirstServlet.java=UTF-8
+encoding//src/com/xiekongye/servlet/RandomNumImage.java=UTF-8
+encoding//src/com/xiekongye/servlet/RegisterServlet.java=UTF-8
+encoding//src/com/xiekongye/servlet/Servlet2.java=UTF-8
+encoding//src/com/xiekongye/util/TokenProcessor.java=UTF-8
