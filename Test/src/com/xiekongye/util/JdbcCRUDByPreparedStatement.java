@@ -82,14 +82,13 @@ public class JdbcCRUDByPreparedStatement {
 			try {
 				connection = JdbcUtil.getConnection();
 				//statement = connection.createStatement();
-				
-				String insertUserSqlString = "insert into user(id,password,name,email,birthday) values(?,?,?,?,?)";
+				//Caution：因为主键ID属性为自增，所以这里不应该设置ID的值，否则会出现password和name值相同的情况，原因待查
+				String insertUserSqlString = "insert into user(name,password,email,birthday) values(?,?,?,?)";
 				pStatement = connection.prepareStatement(insertUserSqlString);
-				pStatement.setInt(1, user.getID());
-				pStatement.setString(2, user.getName());
-				pStatement.setString(3, user.getName());
-				pStatement.setString(4, user.getEmail());
-				pStatement.setDate(5, user.getBirthday());
+				pStatement.setString(1, user.getName());
+				pStatement.setString(2, user.getPassword());
+				pStatement.setString(3, user.getEmail());
+				pStatement.setDate(4, user.getBirthday());
 				int num = pStatement.executeUpdate();
 				if(num > 0){
 					System.out.println("插入成功");
@@ -114,7 +113,7 @@ public class JdbcCRUDByPreparedStatement {
 			try {
 				connection = JdbcUtil.getConnection();
 				//statement = connection.createStatement();
-				if(user.getID() >= 0){
+				if(user.getID() > 0){
 					String deleteUserByIDString = "delete from user where id=?";
 					pStatement = connection.prepareStatement(deleteUserByIDString);
 					pStatement.setInt(1, user.getID());
@@ -122,6 +121,14 @@ public class JdbcCRUDByPreparedStatement {
 					//int num = statement.executeUpdate(deleteUserByIDString);
 					if(num > 0){
 						System.out.println("删除id为"+ user.getID() + "的用户成功！");
+					}
+				}else if (user.getName() != null) {
+					String deleteUserByNameString = "delete from user where name=?";
+					pStatement = connection.prepareStatement(deleteUserByNameString);
+					pStatement.setString(1, user.getName());
+					int num = pStatement.executeUpdate();
+					if(num > 0){
+						System.out.println("删除name为"+ user.getName() + "的用户成功！");
 					}
 				}
 			} catch (Exception e) {
@@ -142,17 +149,28 @@ public class JdbcCRUDByPreparedStatement {
 			try {
 				connection = JdbcUtil.getConnection();
 				//statement = connection.createStatement();
-				if(user.getID() >= 0){
-					String updateUserByIDString = "update user set password=?,name=?,email=?,birthday=?";
+				if(user.getID() > 0){
+					String updateUserByIDString = "update user set name=?,password=?,email=?,birthday=?";
 					pStatement = connection.prepareStatement(updateUserByIDString);
-					pStatement.setString(1, user.getPassword());
-					pStatement.setString(2, user.getName());
+					pStatement.setString(1, user.getName());
+					pStatement.setString(2, user.getPassword());
 					pStatement.setString(3, user.getEmail());
 					pStatement.setDate(4, user.getBirthday());
 					int num = pStatement.executeUpdate();
 					//int num = statement.executeUpdate(updateUserByIDString);
 					if(num > 0){
-						System.out.println("插入id为"+ user.getID() + "的用户成功");
+						System.out.println("更新id为"+ user.getID() + "的用户信息成功！");
+					}
+				}else if (user.getName() != null) {
+					String updateUserByNameString = "update user set name=?,password=?,email=?,birthday=?";
+					pStatement = connection.prepareStatement(updateUserByNameString);
+					pStatement.setString(1, user.getName());
+					pStatement.setString(2, user.getPassword());
+					pStatement.setString(3, user.getEmail());
+					pStatement.setDate(4, user.getBirthday());
+					int num = pStatement.executeUpdate();
+					if(num > 0){
+						System.out.println("更新name为"+ user.getName() + "的用户信息成功！");
 					}
 				}
 			} catch (Exception e) {
