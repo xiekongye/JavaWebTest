@@ -2,6 +2,10 @@ package com.xiekongye.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
@@ -21,7 +25,12 @@ import com.xiekongye.util.TokenProcessor;
 @WebServlet(description = "??????", urlPatterns = { "/servlet/RegisterServlet" })
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
+	
+	//MySql数据库连接串
+	private static String DATABASE_CONNECTION_STR = 
+			"jdbc:mysql://localhost:3306/jdbcStudy?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+	//数据库查询串，查询当前所有用户
+	private static String QUERY_USER_STR = "select * from user";
 	private String userName;
 	private String password;
 	
@@ -126,7 +135,32 @@ public class RegisterServlet extends HttpServlet {
 		outPrintWriter.flush();
 		outPrintWriter.close();
 		
-		
+		//是否已经存在用户
+		Boolean isExistUser = false;
+		//1.加载MySQL数据库驱动
+		try {
+	        Class.forName("com.mysql.jdbc.Driver");
+	        //2.获取与数据库的连接,Client
+	        Connection conn = DriverManager.getConnection(DATABASE_CONNECTION_STR,"root","root");
+	        //3.获取向数据库发送SQL语句的statement
+	        Statement statement = conn.createStatement();
+	        ResultSet resSet = statement.executeQuery(QUERY_USER_STR);
+	        while(resSet.next()){
+	        	String exitsUserName  = (String)resSet.getObject("name");
+	        	if(exitsUserName.equals(userName)){
+	        		isExistUser = true;
+	        		break;
+	        	}
+	        }
+	        if(isExistUser){
+	        	//已经存在相同用户名的注册用户
+	        	
+	        }else {
+				//不存在与输入用户名一样的用户
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

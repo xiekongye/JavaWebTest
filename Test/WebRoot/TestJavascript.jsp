@@ -18,11 +18,18 @@
 	<script src="javascripts/common/jquery-3.0.0.js"></script>
 	<script src="javascripts/test.js"></script>
   </head>
-  
+  <jsp:useBean id="person" class="com.xiekongye.javabean.Person" scope="page"/>
+  <%
+  	person.setName("xiekongye");
+  	person.setAge(27);
+   %>
   <body>
   <%
   pageContext.setAttribute("key1", "val1");
    %>
+   JavaBean测试：<br>
+   姓名：<%=person.getName() %><br>
+   年龄：<%=person.getAge() %>
   <!-- 隐藏域 -->
   <input type="hidden" id="input1" value="隐藏域的值" />
     <div class="one" id="one">

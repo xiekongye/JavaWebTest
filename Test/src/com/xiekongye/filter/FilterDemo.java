@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.jsp.PageContext;
 
 /**
  * @author xiekongye
@@ -51,8 +52,9 @@ public class FilterDemo implements Filter {
 			ex.printStackTrace();
 			System.out.println(ex.toString());
 			//重定向到Exception.jsp页面
+			request.setAttribute("Exception", ex.toString());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/ErrorPage/ExceptionPage.jsp");
-			dispatcher.include(request, response);
+			//dispatcher.include(request, response);
 			dispatcher.forward(request, response);
 		}
 	}

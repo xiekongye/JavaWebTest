@@ -33,8 +33,12 @@
     <servlet-class>com.xiekongye.servlet.RandomNumImage</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>DoFormServlet</servlet-name>
-  	<servlet-class>com.xiekongye.servlet.DoFormServlet</servlet-class>
+    <servlet-name>DoFormServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet.DoFormServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetRegisterServlet</servlet-name>
+  	<servlet-class>com.xiekongye.servlet/GetRegisterResult</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>FirstServlet</servlet-name>
@@ -53,8 +57,12 @@
     <url-pattern>/servlet/RandomNumImageServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>DoFormServlet</servlet-name>
-  	<url-pattern>/servlet/DoFormServlet</url-pattern>
+    <servlet-name>DoFormServlet</servlet-name>
+    <url-pattern>/servlet/DoFormServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetRegisterServlet</servlet-name>
+  	<url-pattern>/servlet/GetRegisterResult</url-pattern>
   </servlet-mapping>
   <context-param>
     <param-name>Author</param-name>
@@ -64,15 +72,12 @@
     <param-name>AppDesc</param-name>
     <param-value>Xiekongye的第一个JavaWeb Application</param-value>
   </context-param>
-  <!-- 过滤器配置 -->
   <filter>
-  	<filter-name>FilterDemo</filter-name>
-  	<filter-class>com.xiekongye.filter.FilterDemo</filter-class>
+    <filter-name>FilterDemo</filter-name>
+    <filter-class>com.xiekongye.filter.FilterDemo</filter-class>
   </filter>
-  <!-- 过滤器Mapping -->
   <filter-mapping>
-  	<filter-name>FilterDemo</filter-name>
-  	<!-- 拦截所有请求 -->
-  	<url-pattern>/*</url-pattern>
+    <filter-name>FilterDemo</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 </web-app>

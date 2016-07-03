@@ -21,19 +21,15 @@
   
   <body>
   	Please enter your UserName and Password
-    <form action="${pageContext.request.contextPath }/servlet/RegisterServlet" method="get">
-    	<div>
-    	UserName:<input type="text" name="userName" id="userName">
-    	</div>
-    	<div>
-    	Password:<input type="password" name="password" id="password">
-    	</div>
-    	<div>
-    	<input type="reset" value="Cancel" name="cancel" id="cancelButton">
-    	<input type="submit" value="Submit" name="submit" id="submitButton">
-    	</div>
-    </form>
+   	<div>
+   	UserName:<input type="text" name="userName" id="userName">
+   	</div>
+   	<div>
+   	Password:<input type="password" name="password" id="password">
+   	</div>
+   	<div>
+   	<button id="cancelButton" value="Cancel">Cancel</button>
+   	<button id="submitButton" value="Submit">Submit</button>
+   	</div>
   </body>
-  <script type="text/javascript" src="/register.js">
-  </script>
 </html>

@@ -22,7 +22,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  	<%@include file="/JspFragments/head.jspf" %>
+  <jsp:include page="/JspFragments/head.jspf"></jsp:include>
+  	<!-- <%@include file="/JspFragments/head.jspf" %> -->
     <h1>这里是首页</h1> <br>
     <%@include file="/JspFragments/foot.jspf" %>
   </body>
