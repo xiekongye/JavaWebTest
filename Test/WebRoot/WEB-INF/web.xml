@@ -37,8 +37,8 @@
     <servlet-class>com.xiekongye.servlet.DoFormServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>GetRegisterServlet</servlet-name>
-  	<servlet-class>com.xiekongye.servlet/GetRegisterResult</servlet-class>
+    <servlet-name>GetRegisterServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet/GetRegisterResult</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>FirstServlet</servlet-name>
@@ -61,8 +61,8 @@
     <url-pattern>/servlet/DoFormServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>GetRegisterServlet</servlet-name>
-  	<url-pattern>/servlet/GetRegisterResult</url-pattern>
+    <servlet-name>GetRegisterServlet</servlet-name>
+    <url-pattern>/servlet/GetRegisterResult</url-pattern>
   </servlet-mapping>
   <context-param>
     <param-name>Author</param-name>
