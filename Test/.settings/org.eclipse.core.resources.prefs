@@ -17,4 +17,5 @@ encoding//src/com/xiekongye/util/DatabaseHelper.java=UTF-8
 encoding//src/com/xiekongye/util/JdbcCRUDByPreparedStatement.java=UTF-8
 encoding//src/com/xiekongye/util/JdbcCRUDByStatement.java=UTF-8
 encoding//src/com/xiekongye/util/JdbcUtil.java=UTF-8
+encoding//src/com/xiekongye/util/MailUtil.java=UTF-8
 encoding//src/com/xiekongye/util/TokenProcessor.java=UTF-8

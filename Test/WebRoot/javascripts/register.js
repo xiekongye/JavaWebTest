@@ -2,9 +2,41 @@
  * 
  */
 $(document).ready(function(){
+	//使用jquery.validate.js插件完成验证
+	var validation = $("#RegisterForm").validate({
+		rules:{
+			"userName":{
+				required:true,
+				minlength:2
+			},
+			"password":{
+				required:true,
+				minlength:6
+			},
+			"userEmail":{
+				required:true,
+				email:true
+			}
+		},
+		messages: {
+			"userName":{
+				required:"用户名不能为空",
+				minlength:"用户名长度至少为2位"
+			},
+			"password":{
+				required:"密码不能为空",
+				minlength:"密码长度至少为6位"
+			},
+			"userEmail":{
+				required:"邮箱不能为空",
+				email:"邮箱格式不正确"
+			}
+		}
+	});
 	//alert("欢迎光临!");
 	var userNameText = $("#userName");
 	var passwordText = $("#password");
+	var userEmailText = $("#userEmail");
 	var cancelButton = $("#cancelButton");
 	var submitButton = $("#submitButton");
 
@@ -36,10 +68,11 @@ $(document).ready(function(){
 				async:false,
 				data:{
 					'userName':userNameText.val(),
-					'password':passwordText.val()
+					'password':passwordText.val(),
+					'userEmail':userEmailText.val()
 				},
 				success: function(data){
-					alert("AJAX请求返回了数据");
+					concole.log("AJAX请求返回了数据");
 					var jsonResult = jQuery.parseJSON(data);
 					var userStr = "";
 					jQuery.each(jsonResult,function(key,value){
@@ -54,15 +87,15 @@ $(document).ready(function(){
 					//alert('AJAX请求完成');
 				},
 				error:function(){
-					alert("AJAX请求失败");
+					console.log("AJAX请求失败");
 					var temp = req;
 				}
 			});
 		}
 	}
+	/*
 	userNameText.on("blur",Validation.validateUsername);
 	passwordText.on("blur",Validation.validatePassword);
+	*/
 	submitButton.on("click",Validation.validateRegisterResult);
-	//submitButton.click = Validation.validateRegisterResult;
-
 })
