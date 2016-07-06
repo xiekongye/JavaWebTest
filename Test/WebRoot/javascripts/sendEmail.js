@@ -21,7 +21,7 @@ $(document).ready(function(){
 			},
 			datatype:'json',
 			success: function(data){
-				if(data){
+				if(data == 'true'){
 					alert("发送邮件成功!");
 				}else{
 					alert("发送邮件失败!");

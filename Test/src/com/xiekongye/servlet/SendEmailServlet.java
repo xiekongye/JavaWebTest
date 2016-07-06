@@ -46,7 +46,7 @@ public class SendEmailServlet extends HttpServlet {
 		String mailContent = request.getParameter("mailContent");
 		Boolean isSendSuccess = MailUtil.sendSimpleEmail(mailTo, mailSubject, mailContent);
 		PrintWriter out = response.getWriter();
-		out.println(new Gson().toJson(isSendSuccess));
+		out.print(new Gson().toJson(isSendSuccess));
 		out.flush();
 		out.close();
 	}
