@@ -1,6 +1,7 @@
 package com.xiekongye.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.xiekongye.util.MailUtil;
 
 /**
@@ -38,11 +40,15 @@ public class SendEmailServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
-		String mailFrom = request.getParameter("mailFrom");
+		//String mailFrom = request.getParameter("mailFrom");
 		String mailTo = request.getParameter("mailTo");
 		String mailSubject = request.getParameter("mailSubject");
 		String mailContent = request.getParameter("mailContent");
-		MailUtil.sendSimpleEmail(mailFrom, mailTo, mailSubject, mailContent);
+		Boolean isSendSuccess = MailUtil.sendSimpleEmail(mailTo, mailSubject, mailContent);
+		PrintWriter out = response.getWriter();
+		out.println(new Gson().toJson(isSendSuccess));
+		out.flush();
+		out.close();
 	}
 
 }

@@ -14,7 +14,7 @@ $(document).ready(function(){
 			type:'post',
 			async:'true',
 			data:{
-				'mailFrom':mailFrom.val(),
+				//'mailFrom':mailFrom.val(),
 				'mailTo':mailTo.val(),
 				'mailSubject':mailSubject.val(),
 				'mailContent':mailContent.val()

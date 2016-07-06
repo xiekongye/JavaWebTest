@@ -21,10 +21,10 @@
   
   <body>
   	<h2>发送简单文本文件</h2>
-    <div>
+    <!-- <div>
     <label>邮件发件人：</label>
     <input type="text" id="mailFrom" name="mailFrom"/>
-    </div>
+    </div> -->
     <div>
     <label>邮件收件人：</label>
     <input type="text" id="mailTo" name="mailTo"/>

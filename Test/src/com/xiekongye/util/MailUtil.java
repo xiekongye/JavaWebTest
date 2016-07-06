@@ -27,9 +27,12 @@ public class MailUtil {
 	/**
 	 * 发送简单的文本邮件
 	 * @author xiekongye
-	 * @param mailForm 发件人邮箱
+	 * @param mailTo 收件人邮箱
+	 * @param mailSubject 邮件主题
+	 * @param mailContent 邮件内容
+	 * @return boolean 邮件是否发送成功
 	 * */
-	public static boolean sendSimpleEmail(String mailFrom,String mailTo,String mailSubject,String mailContent) {
+	public static boolean sendSimpleEmail(String mailTo,String mailSubject,String mailContent) {
 
 		boolean isSendSuccess = false;
 		try{
@@ -38,7 +41,7 @@ public class MailUtil {
 			InputStream in = MailUtil.class.getResourceAsStream("/com/javawebtest/conf/mail.properties");
 			prop.load(in);
 			
-			//
+			//1.获取Session实例
 			Session session = Session.getInstance(prop);
 			session.setDebug(true);
 			
@@ -46,11 +49,11 @@ public class MailUtil {
 			Transport transport = session.getTransport();
 			
 			//3.连接SMTP服务器
-			transport.connect(prop.getProperty("mail.host"), "xiekongye@sohu.com", "sohu900905ye");
+			transport.connect(prop.getProperty("sohu.mail.host"), "xiekongye@sohu.com", "sohu900905ye");
 			
 			//4.创建邮件对象
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(mailFrom));
+			message.setFrom(new InternetAddress(prop.getProperty("sohu.mail.from")));
 			message.setRecipient(RecipientType.TO, new InternetAddress(mailTo));
 			message.setSubject(mailSubject);
 			message.setContent(mailContent,"text/html;charset=utf-8");
@@ -64,8 +67,8 @@ public class MailUtil {
 			isSendSuccess = true;
 		}catch(Exception e){
 			e.printStackTrace();
-		}finally{
 			isSendSuccess = false;
+		}finally{
 		}
 		return isSendSuccess;
 	}
