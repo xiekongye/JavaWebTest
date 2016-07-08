@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.enterprise.inject.New;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.xiekongye.entity.User;
+import com.xiekongye.util.DbManager;
 import com.xiekongye.util.JdbcCRUDByPreparedStatement;
 import com.xiekongye.util.JdbcCRUDByStatement;
 import com.xiekongye.util.JdbcUtil;
@@ -60,26 +62,36 @@ public class GetRegisterResult extends HttpServlet {
 		String password = request.getParameter("password");
 		//是否已经存在用户
 		Boolean isExistUser = false;
-		User user = new User();
-		user.setName(userName);
-		user.setPassword(password);
-		try {
-			ArrayList<User> users = new JdbcCRUDByPreparedStatement().findUser(user);
-			if(users != null && users.size() >= 1){
-				isExistUser = true;
-			}else {
-				new JdbcCRUDByPreparedStatement().insertUser(user);
-			}
-			Gson gson = new Gson();
+		
+		DbManager client = DbManager.getInstance();
+		ArrayList<User> users = client.findUserByName(userName);
+		if(users != null && !users.isEmpty()){
+			isExistUser = true;
+			User user = users.get(0);
 			PrintWriter out = response.getWriter();
-			String jsonResult = gson.toJson(users);
-			out.println(jsonResult);
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} finally{
-			
+			out.print(new Gson().toJson(user));
 		}
+		
+//		User user = new User();
+//		user.setName(userName);
+//		user.setPassword(password);
+//		try {
+//			ArrayList<User> users = new JdbcCRUDByPreparedStatement().findUser(user);
+//			if(users != null && users.size() >= 1){
+//				isExistUser = true;
+//			}else {
+//				new JdbcCRUDByPreparedStatement().insertUser(user);
+//			}
+//			Gson gson = new Gson();
+//			PrintWriter out = response.getWriter();
+//			String jsonResult = gson.toJson(users);
+//			out.println(jsonResult);
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		} finally{
+//			
+//		}
 	}
 
 }

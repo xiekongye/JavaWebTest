@@ -23,7 +23,7 @@
   <body>
   	<h2>请输入你的注册信息：</h2>
   	<h4 style="color:red;display:none">该用户名已经被注册，请选择其他用户名!</h4>
-  	<form id="RegisterForm" action="" method="post">
+  	<div id="RegisterForm">
 	  	<div>
 	   	<label>UserName:</label>
 	   	<input type="text" name="userName" id="userName">
@@ -40,6 +40,6 @@
 	   	<button id="cancelButton" value="Cancel">Cancel</button>
 	   	<button id="submitButton" value="Submit">Submit</button>
 	   	</div>
-  	</form>
+  	</div>
   </body>
 </html>

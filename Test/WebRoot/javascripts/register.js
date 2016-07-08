@@ -72,7 +72,7 @@ $(document).ready(function(){
 					'userEmail':userEmailText.val()
 				},
 				success: function(data){
-					concole.log("AJAX请求返回了数据");
+					//concole.log("AJAX请求返回了数据");
 					var jsonResult = jQuery.parseJSON(data);
 					var userStr = "";
 					jQuery.each(jsonResult,function(key,value){
@@ -87,7 +87,7 @@ $(document).ready(function(){
 					//alert('AJAX请求完成');
 				},
 				error:function(){
-					console.log("AJAX请求失败");
+					//console.log("AJAX请求失败");
 					var temp = req;
 				}
 			});

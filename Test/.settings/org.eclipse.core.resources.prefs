@@ -14,6 +14,7 @@ encoding//src/com/xiekongye/servlet/RandomNumImage.java=UTF-8
 encoding//src/com/xiekongye/servlet/RegisterServlet.java=UTF-8
 encoding//src/com/xiekongye/servlet/Servlet2.java=UTF-8
 encoding//src/com/xiekongye/util/DatabaseHelper.java=UTF-8
+encoding//src/com/xiekongye/util/DbManager.java=UTF-8
 encoding//src/com/xiekongye/util/JdbcCRUDByPreparedStatement.java=UTF-8
 encoding//src/com/xiekongye/util/JdbcCRUDByStatement.java=UTF-8
 encoding//src/com/xiekongye/util/JdbcUtil.java=UTF-8
