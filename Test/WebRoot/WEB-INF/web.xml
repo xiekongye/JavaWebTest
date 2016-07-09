@@ -39,6 +39,11 @@
   <servlet>
     <servlet-name>GetRegisterServlet</servlet-name>
     <servlet-class>com.xiekongye.servlet.GetRegisterResult</servlet-class>
+    <init-param>  
+        <param-name>log4j-properties-location</param-name>  
+        <param-value>/WEB-INF/classes/log4j.properties</param-value>  
+    </init-param>  
+        <load-on-startup>1</load-on-startup>  
   </servlet>
   <servlet-mapping>
     <servlet-name>FirstServlet</servlet-name>

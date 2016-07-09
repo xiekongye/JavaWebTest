@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import javax.enterprise.inject.New;
 import javax.json.Json;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -58,6 +62,16 @@ public class GetRegisterResult extends HttpServlet {
 		// TODO Auto-generated method stub
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=utf-8");
+		Enumeration<String> headers = request.getHeaderNames();
+		if(headers != null ){
+			while(headers.hasMoreElements()){
+				String header = (String)headers.nextElement();
+				String value = request.getHeader(header);
+			}
+		}
+		Log logger = LogFactory.getLog(GetRegisterResult.class.getName());
+		logger.info("log4j:开始获取Request参数");
+		
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 		//是否已经存在用户
@@ -71,27 +85,6 @@ public class GetRegisterResult extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.print(new Gson().toJson(user));
 		}
-		
-//		User user = new User();
-//		user.setName(userName);
-//		user.setPassword(password);
-//		try {
-//			ArrayList<User> users = new JdbcCRUDByPreparedStatement().findUser(user);
-//			if(users != null && users.size() >= 1){
-//				isExistUser = true;
-//			}else {
-//				new JdbcCRUDByPreparedStatement().insertUser(user);
-//			}
-//			Gson gson = new Gson();
-//			PrintWriter out = response.getWriter();
-//			String jsonResult = gson.toJson(users);
-//			out.println(jsonResult);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		} finally{
-//			
-//		}
 	}
 
 }

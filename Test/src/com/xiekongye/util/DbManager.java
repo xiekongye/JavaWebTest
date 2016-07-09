@@ -183,4 +183,156 @@ public class DbManager {
 		}
 		return result;
 	}
+	
+	/**
+	 * 根据用户Email获取用户列表信息
+	 * @author xiekongye
+	 * @param email 用户Email
+	 * @return 符合条件的用户列表
+	 * */
+	public ArrayList<User> findUserByEmail(String email) {
+		ArrayList<User> result = new ArrayList<User>();
+		PreparedStatement pStatement = null;
+		try {
+			String findUserByEmailSql = "select * from user where email=?";
+			pStatement = conn.prepareStatement(findUserByEmailSql);
+			pStatement.setString(1, email);
+			ResultSet resultSet = pStatement.executeQuery();
+			if(resultSet != null){
+				while(resultSet.next()){
+					User user = new User();
+					user.setID(resultSet.getInt("id"));
+					user.setEmail(resultSet.getString("email"));
+					user.setPassword(resultSet.getString("password"));
+					user.setBirthday(resultSet.getDate("birthday"));
+					result.add(user);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 插入新的用户信息
+	 * @author xiekongye
+	 * @param user 用户信息实体
+	 * @return 是否插入成功
+	 * */
+	public boolean insertUser(User user) {
+		boolean isInsertSuccess = false;
+		PreparedStatement pStatement = null;
+		try {
+			ArrayList<User> existUsers = findUserByName(user.getName());
+			if(existUsers == null || existUsers.isEmpty()){
+				String insertUserSql = "insert into user(password,name,email,birthday) values(?,?,?,?)";
+				pStatement = conn.prepareStatement(insertUserSql);
+				pStatement.setString(1, user.getPassword());
+				pStatement.setString(2, user.getName());
+				pStatement.setString(3, user.getEmail());
+				pStatement.setDate(4, user.getBirthday());
+				int num = pStatement.executeUpdate();
+				if(num > 0){
+					isInsertSuccess = true;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return isInsertSuccess;
+	}
+	
+	/**
+	 * 更新指定ID的用户信息
+	 * @author xiekongye
+	 * @param id 指定用户ID
+	 * @return 是否更新成功
+	 * */
+	public boolean updateUserById(int id) {
+		boolean isSuccess = false;
+		PreparedStatement pStatement = null;
+		try {
+			ArrayList<User> existUsers = findUserById(id);
+			if(existUsers != null && !existUsers.isEmpty()){
+				User existUser = existUsers.get(0);
+				String updateUserByIdSql = "update user set password=?,name=?,email=?,birthday=? where id=" + id;
+				pStatement = conn.prepareStatement(updateUserByIdSql);
+				pStatement.setString(1, existUser.getPassword());
+				pStatement.setString(2, existUser.getName());
+				pStatement.setString(3, existUser.getEmail());
+				pStatement.setDate(4, existUser.getBirthday());
+				int num = pStatement.executeUpdate();
+				if(num > 0){
+					isSuccess = true;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
+	
+	/**
+	 * 更新指定Name的用户信息
+	 * @author xiekongye
+	 * @param name 指定用户Name
+	 * @return 是否更新成功
+	 * */
+	public boolean updateUserByName(String name) {
+		boolean isSuccess = false;
+		PreparedStatement pStatement = null;
+		try {
+			ArrayList<User> existUsers = findUserByName(name);
+			if(existUsers != null && !existUsers.isEmpty()){
+				User existUser = existUsers.get(0);
+				String updateUserByIdSql = "update user set password=?,email=?,birthday=? where name=" + name;
+				pStatement = conn.prepareStatement(updateUserByIdSql);
+				pStatement.setString(1, existUser.getPassword());
+				pStatement.setString(2, existUser.getEmail());
+				pStatement.setDate(3, existUser.getBirthday());
+				int num = pStatement.executeUpdate();
+				if(num > 0){
+					isSuccess = true;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
+	
+	/**
+	 * 更新指定Name的用户信息
+	 * @author xiekongye
+	 * @param name 指定用户Name
+	 * @return 是否更新成功
+	 * */
+	public boolean updateUserByEmail(String email) {
+		boolean isSuccess = false;
+		PreparedStatement pStatement = null;
+		try {
+			ArrayList<User> existUsers = findUserByEmail(email);
+			if(existUsers != null && !existUsers.isEmpty()){
+				User existUser = existUsers.get(0);
+				String updateUserByIdSql = "update user set password=?,name=?,birthday=? where email=" + email;
+				pStatement = conn.prepareStatement(updateUserByIdSql);
+				pStatement.setString(1, existUser.getPassword());
+				pStatement.setString(2, existUser.getName());
+				pStatement.setDate(3, existUser.getBirthday());
+				int num = pStatement.executeUpdate();
+				if(num > 0){
+					isSuccess = true;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
 }
