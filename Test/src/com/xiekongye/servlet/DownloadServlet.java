@@ -3,7 +3,9 @@ package com.xiekongye.servlet;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
@@ -52,7 +54,8 @@ public class DownloadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("text/html;charset=utf-8");
-		downloadFileByOutputStream(response);
+		//downloadFileByOutputStream(response);
+		downloadFileByAttachment(response);
 	}
 
 	/**
@@ -85,5 +88,28 @@ public class DownloadServlet extends HttpServlet {
 		}
 		inputStream.close();
 		
+	}
+	
+	/**
+	 * 下载一个文件
+	 * @author xiekongye
+	 * @param response HttpServletResponse
+	 * @throws FileNotFoundException,IOException
+	 * */
+	private void downloadFileByAttachment(HttpServletResponse response) throws FileNotFoundException,IOException{
+		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition", "attachment;filename=JavaScript Program Design.pdf");
+		OutputStream os = response.getOutputStream();
+		ServletContext context = this.config.getServletContext();
+		URL url = context.getResource("/files/JavaScript Program Design.pdf");
+		InputStream is = url.openStream();
+		byte[] bytearray = new byte[1024];
+		int bytesread = 0;
+		while((bytesread = is.read(bytearray)) != -1){
+			//没有读到文件结尾
+			os.write(bytearray);
+		}
+		os.flush();
+		os.close();
 	}
 }

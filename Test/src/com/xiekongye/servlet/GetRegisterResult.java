@@ -15,6 +15,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +39,9 @@ import com.xiekongye.util.JdbcUtil;
 @WebServlet(description = "????????", urlPatterns = { "/GetRegisterResult" })
 public class GetRegisterResult extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	//
+	private ServletConfig servletConfig;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,6 +50,11 @@ public class GetRegisterResult extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		this.servletConfig = config;
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

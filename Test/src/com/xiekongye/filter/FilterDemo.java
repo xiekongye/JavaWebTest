@@ -55,7 +55,7 @@ public class FilterDemo implements Filter {
 			request.setAttribute("Exception", ex.toString());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/ErrorPage/ExceptionPage.jsp");
 			//dispatcher.include(request, response);
-			dispatcher.forward(request, response);
+			dispatcher.forward(request, response);//该方法只能在相应没有被提交的情况下才能调用
 		}
 	}
 
