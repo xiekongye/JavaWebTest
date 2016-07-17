@@ -7,8 +7,8 @@ import java.sql.Date;
 
 
 /**
+ * 用户信息
  * @author xiekongye
- *
  */
 public class User {
 

@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.xiekongye.entity.RegisterResultModel;
 import com.xiekongye.entity.User;
 import com.xiekongye.util.DbManager;
 import com.xiekongye.util.JdbcCRUDByPreparedStatement;
@@ -83,17 +84,25 @@ public class GetRegisterResult extends HttpServlet {
 		
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
-		//是否已经存在用户
-		Boolean isExistUser = false;
-		
 		DbManager client = DbManager.getInstance();
+		RegisterResultModel registerResultModel = new RegisterResultModel();
+		PrintWriter out = response.getWriter();
 		ArrayList<User> users = client.findUserByName(userName);
 		if(users != null && !users.isEmpty()){
-			isExistUser = true;
-			User user = users.get(0);
-			PrintWriter out = response.getWriter();
-			out.print(new Gson().toJson(user));
+			registerResultModel.IsSuccess = false;
+			registerResultModel.ExistUsers = users;
+			
+		}else{
+			//用户没有被注册，则注册当前用户，并自动登录到用户详细信息页，且设置Cookie
+			User user = new User();
+			user.setName(userName);
+			user.setPassword(password);
+			boolean isInsertSuccess = client.insertUser(user);
+			registerResultModel.IsSuccess = isInsertSuccess;
 		}
+		out.print(new Gson().toJson(registerResultModel));
+		out.flush();
+		out.close();
 	}
 
 }

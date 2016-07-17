@@ -1,16 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <base href="<%=basePath%>">
-    
-    <title>首页</title>
-    <meta http-equiv="ContentType" content="text/html;charset=utf-8">
+    <title>JavaBean测试页面</title>
+
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -19,12 +13,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
+
   </head>
   
   <body>
-  <%@include file="/JspFragments/head.jspf" %>
-  <!--<jsp:include page="/JspFragments/head.jspf"></jsp:include>-->
-    <h1>这里是首页</h1> <br>
-    <%@include file="/JspFragments/foot.jspf" %>
+  <form action="/Test/servlet/Customer" method="post">
+  	<table>
+  		<tr><td>客户名：</td><td><input type="text" name="custName"/></td></tr>
+  		<tr><td>电子邮件：</td><td><input type="text" name="email"/></td></tr>
+  		<tr><td>电话：</td><td><input type="text" name="phone"/></td></tr>
+  		<tr><td><input type="submit" value="确定"/></td>
+  		<td><input type="reset" value="重置"/></td></tr>
+  	</table>
+  </form>
   </body>
 </html>

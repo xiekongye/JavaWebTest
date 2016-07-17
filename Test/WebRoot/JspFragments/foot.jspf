@@ -1,3 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-
-<h1 style="color:red;">网页尾部</h1>
+<script src="javascripts/common/jquery-3.0.0.js"></script>
+<script src="javascripts/foot.js"></script>
+<h3 style="color:red;">网页尾部</h3>
+<h3 id="timespan" style="color:greed"></h3>

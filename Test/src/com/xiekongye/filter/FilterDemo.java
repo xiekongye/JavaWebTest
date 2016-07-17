@@ -46,6 +46,7 @@ public class FilterDemo implements Filter {
 			response.setCharacterEncoding("utf-8");
 			
 			System.out.println("FilterDemo执行前...");
+			
 			filterChain.doFilter(request, response);//让目标资源执行，放行
 			System.out.println("FilterDemo执行后...");
 		} catch (Exception ex) {

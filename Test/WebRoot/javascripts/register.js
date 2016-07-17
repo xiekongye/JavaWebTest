@@ -73,6 +73,7 @@ $(document).ready(function(){
 				},
 				success: function(data){
 					//concole.log("AJAX请求返回了数据");
+					/*
 					var jsonResult = jQuery.parseJSON(data);
 					var userStr = "";
 					jQuery.each(jsonResult,function(key,value){
@@ -81,7 +82,13 @@ $(document).ready(function(){
 							});
 					});
 					alert(userStr);
-					
+					*/
+					if(data){
+						var result = jQuery.parseJSON(data);
+						$("#PromptInfo").html("该用户名已经被注册，请选择其他用户名!");
+					}else{
+						
+					}
 				},
 				complete:function(){
 					//alert('AJAX请求完成');

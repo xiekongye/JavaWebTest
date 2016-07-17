@@ -115,9 +115,18 @@
         <servlet-name>SendEmailServlet</servlet-name>
         <servlet-class>com.xiekongye.servlet.SendEmailServlet</servlet-class>
     </servlet>
+  <servlet>
+    <servlet-name>CustomerServlet</servlet-name>
+    <servlet-class>com.xiekongye.servlet.CustomerServlet</servlet-class>
+  </servlet>
+
 
     <servlet-mapping>
     	<servlet-name>SendEmailServlet</servlet-name>
     	<url-pattern>/servlet/SendEmail</url-pattern>
     </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CustomerServlet</servlet-name>
+    <url-pattern>/servlet/Customer</url-pattern>
+  </servlet-mapping>
 </web-app>

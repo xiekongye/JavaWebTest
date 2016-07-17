@@ -22,7 +22,7 @@
   
   <body>
   	<h2>请输入你的注册信息：</h2>
-  	<h4 style="color:red;display:none">该用户名已经被注册，请选择其他用户名!</h4>
+  	<h4 id="PromptInfo" style="color:red;display:none"></h4>
   	<div id="RegisterForm">
 	  	<div>
 	   	<label>UserName:</label>
