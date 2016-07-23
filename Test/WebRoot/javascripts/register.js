@@ -85,8 +85,13 @@ $(document).ready(function(){
 					*/
 					if(data){
 						var result = jQuery.parseJSON(data);
-						$("#PromptInfo").html("该用户名已经被注册，请选择其他用户名!");
-					}else{
+						if(result.IsSuccess){
+							$("#PromptInfo").html("用户注册成功!");
+							$("#PromptInfo").show();
+						}else{
+							$("#PromptInfo").html("该用户名已经被注册，请选择其他用户名!");
+							$("#PromptInfo").show();
+						}
 						
 					}
 				},

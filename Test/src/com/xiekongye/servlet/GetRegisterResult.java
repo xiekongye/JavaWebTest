@@ -84,25 +84,32 @@ public class GetRegisterResult extends HttpServlet {
 		
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
-		DbManager client = DbManager.getInstance();
-		RegisterResultModel registerResultModel = new RegisterResultModel();
-		PrintWriter out = response.getWriter();
-		ArrayList<User> users = client.findUserByName(userName);
-		if(users != null && !users.isEmpty()){
-			registerResultModel.IsSuccess = false;
-			registerResultModel.ExistUsers = users;
-			
-		}else{
-			//用户没有被注册，则注册当前用户，并自动登录到用户详细信息页，且设置Cookie
-			User user = new User();
-			user.setName(userName);
-			user.setPassword(password);
-			boolean isInsertSuccess = client.insertUser(user);
-			registerResultModel.IsSuccess = isInsertSuccess;
+		try {
+			DbManager client = DbManager.getInstance();
+			String databaseName = client.getDatabaseName();
+			String databaseVersion = client.getDatabaseVersion();
+			RegisterResultModel registerResultModel = new RegisterResultModel();
+			PrintWriter out = response.getWriter();
+			ArrayList<User> users = client.findUserByName(userName);
+			if(users != null && !users.isEmpty()){
+				registerResultModel.IsSuccess = false;
+				registerResultModel.ExistUsers = users;
+				
+			}else{
+				//用户没有被注册，则注册当前用户，并自动登录到用户详细信息页，且设置Cookie
+				User user = new User();
+				user.setName(userName);
+				user.setPassword(password);
+				boolean isInsertSuccess = client.insertUser(user);
+				registerResultModel.IsSuccess = isInsertSuccess;
+			}
+			out.print(new Gson().toJson(registerResultModel));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("GetRegisterResult出错，错误信息:" + e.getCause().getMessage(), e);
 		}
-		out.print(new Gson().toJson(registerResultModel));
-		out.flush();
-		out.close();
 	}
 
 }
