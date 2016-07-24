@@ -85,8 +85,11 @@ public class DbManager {
 	private Connection getConnectionByDbPool(){
 		Connection result = null;
 		try {
+			//初始化JNDI容器
 			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/sampleDS");
+			//获取JNDI容器
+			Context envContext = (Context) context.lookup("java:comp/env");
+			DataSource dataSource = (DataSource) envContext.lookup("jdbc/sampleDS");
 			result = dataSource.getConnection();
 		} catch (NamingException ne) {
 			logger.error("获取javax.naming.Context对象异常", ne);
