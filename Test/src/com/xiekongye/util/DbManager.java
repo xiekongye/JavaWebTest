@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
@@ -20,9 +21,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSourceFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.xiekongye.entity.User;
 
 /**
@@ -48,37 +51,60 @@ public class DbManager {
 	
 	//构造函数私有化，不能通过构造函数创建实例
 	private DbManager() throws Exception{
-		Connection connection = null;
 		try {
+			Connection connection = null;
+			InputStream in = DbManager.class.getResourceAsStream("/appsetting.properties");
+			Properties prop = new Properties();
 			if(!hasExistInstance){
 				//生成数据库连接类唯一标识符
 				UUID uuid = UUID.randomUUID();
 				guid = uuid.toString().replace("-", "");
-				connection = getConnectionByDbPool();
-				if(connection == null){
+				prop.load(in);
+				//获取配置文件中的数据库连接方式
+				String dbPattern = prop.getProperty("dbPattern");
+				switch (dbPattern) {
+				case "CustomDbPool":
+					//自定义数据库连接池方式
+					connection = getConnectionByCustomDbPool();
+					break;
+				case "JDBC":
+					//JDBC方式
 					connection = getConnectionByJdbc();
+					break;
+				case "TomcatPool":
+					//Tomcat容器的数据库连接池
+					connection = getConnectionByDbPool();
+					break;
+				case "DBCP":
+					//DBCP数据库连接池方式
+					connection = getConnectionByDBCP();
+					break;
+				case "C3p0":
+					//C3P0数据库连接池方式
+					connection = getConnectionByC3P0();
+					break;
+				default:
+					connection = null;
+					break;
 				}
 				this.conn = connection;
 				//获取数据库元数据对象
-				this.dbMetaData = conn.getMetaData();
+				if(this.conn != null){
+					this.dbMetaData = conn.getMetaData();
+				}
 			}else {
 				throw new Exception("已经存在DbManager类的实例");
 			}
-			
-		} catch (IOException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}  catch (ClassNotFoundException e) {
-			// TODO: handle exception
-			e.printStackTrace();
+		} catch (IOException ioException){
+			logger.error("创建DbManager实例过程中读取appsetting配置文件出错", ioException);
+			throw new Exception("创建DbManager实例过程中读取配置文件出错", ioException);
+		} catch (Exception e) {
+			throw new Exception("创建DbManager实例过程出错", e);
 		}
 	}
 	
 	/**
-	 * 通过数据库连接池获取数据库连接对象
+	 * 通过Tomcat数据库连接池获取数据库连接对象
 	 * @author xiekongye
 	 * @return 数据库连接对象，无法获取会返回NULL
 	 * */
@@ -143,18 +169,76 @@ public class DbManager {
 	}
 	
 	/**
+	 * 通过自定义的数据库连接池获取数据库连接对象
+	 * @author xiekongye
+	 * @return Connection 数据库连接对象，失败返回为NULL
+	 * */
+	private Connection getConnectionByCustomDbPool() {
+		Connection result = null;
+		try {
+			result = new CustomJdbcPool().getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 通过DBCP方式获取数据库连接
+	 * @author xiekongye
+	 * @return Connection 数据库连接对象，失败返回为NULL
+	 * */
+	private Connection getConnectionByDBCP() {
+		Connection result = null;
+		try {
+			//加载DbcpCOnfig配置文件
+			InputStream in = DbManager.class.getResourceAsStream("/dbcpconfig.properties");
+			Properties prop = new Properties();
+			prop.load(in);
+			//创建数据源
+			DataSource ds = BasicDataSourceFactory.createDataSource(prop);
+			result = ds.getConnection();
+		} catch (IOException ioException){
+			logger.debug("读取dbcpconfig配置文件出错",ioException);
+		} catch (SQLException sqlException) {
+			logger.debug("通过DBCP获取数据库连接失败", sqlException);
+		} catch (Exception e) {
+			
+		}
+		return result;
+	}
+	
+	/**
+	 * 通过C3P0方式获取数据库连接
+	 * @author xiekongye
+	 * @return Connection 数据库连接对象，失败返回为NULL
+	 * */
+	private Connection getConnectionByC3P0() {
+		Connection result = null;
+		try {
+			DataSource ds = new ComboPooledDataSource("MySql");
+			result = ds.getConnection();
+		} catch (SQLException sqlException) {
+			logger.error("通过C3P0方式获取数据库连接失败", sqlException);
+		}
+		return result;
+	}
+	
+	/**
 	 * 获取当前数据库连接的实例
 	 * @author xiekongye
 	 * @return static DbManager 唯一的数据库连接实例
 	 * */
-	public static DbManager getInstance() throws Exception{
+	public static DbManager getInstance(){
 		if(_instance == null){
 			synchronized (DbManager.class) {
 				if(_instance == null){
 					try {
 						_instance = new DbManager();
 					} catch (Exception e) {
-						throw new Exception(e.getCause().getMessage());
+						//构造函数出现异常时返回NULL，因为此时该实例的数据域可能无法使用
+						_instance = null;
 					}
 				}
 			}
@@ -343,12 +427,13 @@ public class DbManager {
 		try {
 			ArrayList<User> existUsers = findUserByName(user.getName());
 			if(existUsers == null || existUsers.isEmpty()){
-				String insertUserSql = "insert into user(password,name,email,birthday) values(?,?,?,?)";
+				String insertUserSql = "insert into user(password,name,email,birthday,inserttime) values(?,?,?,?,?)";
 				pStatement = conn.prepareStatement(insertUserSql);
 				pStatement.setString(1, user.getPassword());
 				pStatement.setString(2, user.getName());
 				pStatement.setString(3, user.getEmail());
 				pStatement.setDate(4, user.getBirthday());
+				pStatement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 				int num = pStatement.executeUpdate();
 				if(num > 0){
 					isInsertSuccess = true;
@@ -374,12 +459,13 @@ public class DbManager {
 			ArrayList<User> existUsers = findUserById(id);
 			if(existUsers != null && !existUsers.isEmpty()){
 				User existUser = existUsers.get(0);
-				String updateUserByIdSql = "update user set password=?,name=?,email=?,birthday=? where id=" + id;
+				String updateUserByIdSql = "update user set password=?,name=?,email=?,birthday=?,lastmodifytime=? where id=" + id;
 				pStatement = conn.prepareStatement(updateUserByIdSql);
 				pStatement.setString(1, existUser.getPassword());
 				pStatement.setString(2, existUser.getName());
 				pStatement.setString(3, existUser.getEmail());
 				pStatement.setDate(4, existUser.getBirthday());
+				pStatement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 				int num = pStatement.executeUpdate();
 				if(num > 0){
 					isSuccess = true;
@@ -405,11 +491,12 @@ public class DbManager {
 			ArrayList<User> existUsers = findUserByName(name);
 			if(existUsers != null && !existUsers.isEmpty()){
 				User existUser = existUsers.get(0);
-				String updateUserByIdSql = "update user set password=?,email=?,birthday=? where name=" + name;
+				String updateUserByIdSql = "update user set password=?,email=?,birthday=?,lastmodifytime=? where name=" + name;
 				pStatement = conn.prepareStatement(updateUserByIdSql);
 				pStatement.setString(1, existUser.getPassword());
 				pStatement.setString(2, existUser.getEmail());
 				pStatement.setDate(3, existUser.getBirthday());
+				pStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 				int num = pStatement.executeUpdate();
 				if(num > 0){
 					isSuccess = true;
@@ -435,11 +522,12 @@ public class DbManager {
 			ArrayList<User> existUsers = findUserByEmail(email);
 			if(existUsers != null && !existUsers.isEmpty()){
 				User existUser = existUsers.get(0);
-				String updateUserByIdSql = "update user set password=?,name=?,birthday=? where email=" + email;
+				String updateUserByIdSql = "update user set password=?,name=?,birthday=?,lastmodifytime=? where email=" + email;
 				pStatement = conn.prepareStatement(updateUserByIdSql);
 				pStatement.setString(1, existUser.getPassword());
 				pStatement.setString(2, existUser.getName());
 				pStatement.setDate(3, existUser.getBirthday());
+				pStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 				int num = pStatement.executeUpdate();
 				if(num > 0){
 					isSuccess = true;
