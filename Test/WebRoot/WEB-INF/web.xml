@@ -129,4 +129,20 @@
     <servlet-name>CustomerServlet</servlet-name>
     <url-pattern>/servlet/Customer</url-pattern>
   </servlet-mapping>
+  <!-- <listener>
+  	<listener-class>com.xiekongye.listener.ServletContextListenerDemo</listener-class>
+  </listener>
+  <listener>
+  	<listener-class>com.xiekongye.listener.HttpSessionListenerDemo</listener-class>
+  </listener>
+  <listener>
+  	<listener-class>com.xiekongye.listener.ServletRequestListenerDemo</listener-class>
+  </listener> -->
+  <listener>
+  	<listener-class>com.xiekongye.listener.MyCustomListener</listener-class>
+  </listener>
+  <!-- 配置HttpSession对象的销毁时机 -->
+  <session-config>
+  	<session-timeout>1</session-timeout>
+  </session-config>
 </web-app>
