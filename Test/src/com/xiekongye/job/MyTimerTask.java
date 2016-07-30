@@ -5,11 +5,14 @@ package com.xiekongye.job;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
+
+import com.xiekongye.listener.MyCustomListener;
 
 /**
  * 定时销毁创建时间超过一定范围的Session
@@ -17,8 +20,6 @@ import javax.servlet.http.HttpSession;
  *
  */
 public class MyTimerTask extends TimerTask {
-	//Session集合
-	private Set<HttpSession> sessionSet = new HashSet<>();
 	//Lock
 	private Object locker;
 	//private
@@ -31,9 +32,8 @@ public class MyTimerTask extends TimerTask {
 	 * @param sessionSet Session集合
 	 * @param locker 锁
 	 * */
-	public MyTimerTask(Set<HttpSession> sessionSet,Object locker,String taskName) {
-		this.sessionSet = sessionSet;
-		this.locker = locker;
+	public MyTimerTask(String taskName) {
+		this.locker = MyCustomListener.getLocker();
 		this.taskName = taskName;
 		this.uuid = UUID.randomUUID().toString();
 		this.createdTime = System.currentTimeMillis();
@@ -45,17 +45,19 @@ public class MyTimerTask extends TimerTask {
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		System.out.println("销毁过期Session定时任务启动");
 		System.out.println("任务名：" + this.taskName + ",任务创建时间:" + new Date(this.createdTime) + ",任务唯一标识符:" + this.uuid);
-		synchronized (locker) {
-			for (HttpSession httpSession : sessionSet) {
-				if((System.currentTimeMillis() - httpSession.getLastAccessedTime()) > 1000*30){
-					httpSession.invalidate();
-					sessionSet.remove(httpSession);
+		
+			if(MyCustomListener.getHttpSessions() != null && MyCustomListener.getHttpSessions().size() >= 1){//加入判断，不然出现异常
+				Iterator<HttpSession> iterator = MyCustomListener.getHttpSessions().iterator();
+				while(iterator.hasNext()){//HashSet只能使用迭代器操作，否则会出现ConcurrentException异常
+					if(System.currentTimeMillis() - iterator.next().getLastAccessedTime() > 1000*30){
+						iterator.next().invalidate();
+						iterator.remove();//使用迭代器删除
+					}
 				}
 			}
-		}
+		
 	}
 
 }

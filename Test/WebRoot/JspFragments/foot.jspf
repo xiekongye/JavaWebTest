@@ -3,3 +3,4 @@
 <script src="javascripts/foot.js"></script>
 <h3 style="color:red;">网页尾部</h3>
 <h3 id="timespan" style="color:greed"></h3>
+<h3>当前在线人数为:<%=application.getAttribute("OnlineCount") %></h3>
