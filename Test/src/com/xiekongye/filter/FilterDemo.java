@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
@@ -23,9 +24,8 @@ import javax.servlet.jsp.PageContext;
  */
 public class FilterDemo implements Filter {
 	//private成员变量
-	private String filterName;
-	private ServletContext servletContext;
-
+	private FilterConfig config;
+	private String logPrefix;
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */
@@ -33,7 +33,9 @@ public class FilterDemo implements Filter {
 	public void destroy() {
 		// TODO Auto-generated method stub
 		System.out.println("FilterDemo Destroy执行...");
-	}
+		this.config = null;
+		logPrefix = null;
+		}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
@@ -48,8 +50,20 @@ public class FilterDemo implements Filter {
 			response.setCharacterEncoding("utf-8");
 			
 			System.out.println("FilterDemo执行前...");
-			
+			long beginTime = System.currentTimeMillis();
 			filterChain.doFilter(request, response);//让目标资源执行，放行
+			long endTime = System.currentTimeMillis();
+			StringBuffer logMessage = new StringBuffer();
+			if(request instanceof HttpServletRequest){
+				logMessage.append(((HttpServletRequest)request).getRequestURL());
+			}
+			logMessage.append(":");
+			logMessage.append(endTime-beginTime);
+			logMessage.append("ms");
+			if(logMessage != null){
+				logMessage.insert(0, logPrefix);
+			}
+			config.getServletContext().log(logMessage.toString());
 			System.out.println("FilterDemo执行后...");
 		} catch (Exception ex) {
 //			ex.printStackTrace();
@@ -69,9 +83,11 @@ public class FilterDemo implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// TODO Auto-generated method stub
+		this.config = filterConfig;
+		logPrefix = filterConfig.getInitParameter("Performance");
 		System.out.println("----过滤器初始化----");
-		filterName = filterConfig.getFilterName();
-		servletContext = filterConfig.getServletContext();
+		filterConfig.getFilterName();
+		filterConfig.getServletContext();
 	}
 
 }
