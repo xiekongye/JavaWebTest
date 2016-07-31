@@ -4,8 +4,10 @@
 package com.xiekongye.listener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +29,7 @@ public class MyCustomListener implements HttpSessionListener,
 		ServletContextListener {
 	//HttpSession集合
 //	private static Set<HttpSession> sessionSet = new HashSet<>();
-	private static ArrayList<HttpSession> sessions = new ArrayList<HttpSession>();
+	private static List<HttpSession> sessions = Collections.synchronizedList(new ArrayList<HttpSession>());
 	//锁
 	private static Object locker = new Object();
 
@@ -61,7 +63,7 @@ public class MyCustomListener implements HttpSessionListener,
 //	}
 	
 	
-	public static ArrayList<HttpSession> getHttpSessions() {
+	public static List<HttpSession> getHttpSessions() {
 		return sessions;
 	}
 
@@ -79,20 +81,19 @@ public class MyCustomListener implements HttpSessionListener,
 	 */
 	@Override
 	public void sessionCreated(HttpSessionEvent event) {
-		if(event != null){
-			synchronized (locker) {
-				ServletContext context = event.getSession().getServletContext();
-				Integer onlineCount = (Integer)context.getAttribute("OnlineCount");//网站在线人数
-				if(onlineCount == null){
-					context.setAttribute("OnlineCount", 1);
-				}else {
-					onlineCount++;
-					context.setAttribute("OnlineCount", onlineCount);
-				}
-//				sessionSet.add((HttpSession)event.getSession());
-				sessions.add((HttpSession)event.getSession());
+	if(event != null){
+			ServletContext context = event.getSession().getServletContext();
+			Integer onlineCount = (Integer)context.getAttribute("OnlineCount");//网站在线人数
+			if(onlineCount == null){
+				context.setAttribute("OnlineCount", 1);
+			}else {
+				onlineCount++;
+				context.setAttribute("OnlineCount", onlineCount);
 			}
+//				sessionSet.add((HttpSession)event.getSession());
+			sessions.add((HttpSession)event.getSession());
 		}
+		
 	}
 
 	/* (non-Javadoc)

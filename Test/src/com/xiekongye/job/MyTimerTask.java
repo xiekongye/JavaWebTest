@@ -12,6 +12,8 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
+import sun.net.www.content.audio.aiff;
+
 import com.xiekongye.listener.MyCustomListener;
 
 /**
@@ -47,16 +49,23 @@ public class MyTimerTask extends TimerTask {
 	public void run() {
 		System.out.println("销毁过期Session定时任务启动");
 		System.out.println("任务名：" + this.taskName + ",任务创建时间:" + new Date(this.createdTime) + ",任务唯一标识符:" + this.uuid);
-		
-			if(MyCustomListener.getHttpSessions() != null && MyCustomListener.getHttpSessions().size() >= 1){//加入判断，不然出现异常
-				Iterator<HttpSession> iterator = MyCustomListener.getHttpSessions().iterator();
-				while(iterator.hasNext()){//HashSet只能使用迭代器操作，否则会出现ConcurrentException异常
-					if(System.currentTimeMillis() - iterator.next().getLastAccessedTime() > 1000*30){
-						iterator.next().invalidate();
-						iterator.remove();//使用迭代器删除
-					}
+		if(MyCustomListener.getHttpSessions() != null && MyCustomListener.getHttpSessions().size() >= 1){
+			Iterator<HttpSession> iterator = MyCustomListener.getHttpSessions().iterator();
+			while(iterator.hasNext()){
+				if(System.currentTimeMillis() - iterator.next().getLastAccessedTime() > 1000*30){
+					iterator.remove();
 				}
 			}
+		}
+//			if(MyCustomListener.getHttpSessions() != null && MyCustomListener.getHttpSessions().size() >= 1){//加入判断，不然出现异常
+//				Iterator<HttpSession> iterator = MyCustomListener.getHttpSessions().iterator();
+//				while(iterator.hasNext()){//HashSet只能使用迭代器操作，否则会出现ConcurrentException异常
+//					if(System.currentTimeMillis() - iterator.next().getLastAccessedTime() > 1000*30){
+//						iterator.next().invalidate();
+//						iterator.remove();//使用迭代器删除
+//					}
+//				}
+//			}
 		
 	}
 

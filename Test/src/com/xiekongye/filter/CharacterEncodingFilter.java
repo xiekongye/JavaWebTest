@@ -68,9 +68,10 @@ public class CharacterEncodingFilter implements Filter {
 			MyCharacterEncodingRequest requestWrapper = new MyCharacterEncodingRequest(httpServletRequest);
 			chain.doFilter(requestWrapper, response);
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			System.out.println(e.toString());
+//			// TODO: handle exception
+			//注：这里不能加下面的语句，会报java.lang.IllegalStateException: Cannot forward after response has been committed
+//			e.printStackTrace();
+//			System.out.println(e.toString());
 			//重定向到Exception.jsp页面
 			request.setAttribute("Exception", e.toString());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/ErrorPage/ExceptionPage.jsp");

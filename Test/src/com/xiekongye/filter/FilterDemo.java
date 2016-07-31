@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
 /**
@@ -41,6 +42,7 @@ public class FilterDemo implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain filterChain) throws IOException, ServletException {
 		try {
+			response = (HttpServletResponse)response; 
 			request.setCharacterEncoding("utf-8");
 			response.setContentType("text/html;charset=utf-8");
 			response.setCharacterEncoding("utf-8");
@@ -50,13 +52,14 @@ public class FilterDemo implements Filter {
 			filterChain.doFilter(request, response);//让目标资源执行，放行
 			System.out.println("FilterDemo执行后...");
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.out.println(ex.toString());
+//			ex.printStackTrace();
+//			System.out.println(ex.toString());
 			//重定向到Exception.jsp页面
 			request.setAttribute("Exception", ex.toString());
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/ErrorPage/ExceptionPage.jsp");
 			//dispatcher.include(request, response);
 			dispatcher.forward(request, response);//该方法只能在相应没有被提交的情况下才能调用
+			
 		}
 	}
 
